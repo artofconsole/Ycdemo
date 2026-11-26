@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Extract zip to root
-        run: unzip -o ycloud.zip -d .
+        run: unzip -o ycloud-nov-27-2026-2-07-32-am.zip -d .
 
       - name: Commit extracted files
         run: |
