@@ -1,0 +1,22 @@
+name: Android APK Build
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Java Kurulumu
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Gradle Kurulumu ve APK Derleme
+        uses: gradle/actions/setup-gradle@v4
+      - name: APK Oluştur
+        run: gradle assembleDebug
+      - name: APK Yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: hazir-apk
+          path: app/build/outputs/apk/debug/*.apk
