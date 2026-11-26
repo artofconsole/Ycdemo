@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">yCloud</string>
+
+    <string name="cd_app_logo">yCloud logosu</string>
+    <string name="cd_back">Geri</string>
+    <string name="cd_add_video">Video ekle</string>
+    <string name="cd_kid_lock">Çocuk ekran kilidi</string>
+    <string name="cd_parent_panel">Ebeveyn paneli</string>
+    <string name="cd_play_pause">Oynat veya duraklat</string>
+    <string name="cd_favorite_toggle">Favori durumunu değiştir</string>
+    <string name="cd_touch_lock">Dokunma ve kumanda kilidi</string>
+    <string name="cd_fullscreen_toggle">Tam ekran oranını değiştir</string>
+    <string name="cd_orientation_toggle">Ekran yönünü değiştir</string>
+    <string name="cd_previous_video">Önceki video</string>
+    <string name="cd_next_video">Sonraki video</string>
+    <string name="cd_seek_back">10 saniye geri sar</string>
+    <string name="cd_seek_forward">10 saniye ileri sar</string>
+    <string name="cd_swipe_up_videos">Diğer videoları aç</string>
+
+    <string name="kid_lock_active_badge">Kilitli</string>
+    <string name="kid_lock_inactive_badge">Açık</string>
+
+    <string name="empty_title">Henüz video eklenmedi</string>
+    <string name="empty_subtitle">Cihazınızdan, YouTube\'dan veya buluttan video ekleyerek çocuklar için güvenli bir izleme alanı oluşturun.</string>
+    <string name="action_pick_from_files">Dosyalardan Video Seç</string>
+    <string name="action_pick_from_gallery">Galeriden Video Seç</string>
+
+    <string name="swipe_up_hint">Diğer Videolar</string>
+    <string name="other_videos_title">Diğer Videolar</string>
+</resources>

@@ -1,0 +1,90 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string &&
+        id.size() > 0 &&
+        id.size() <= 128 &&
+        !id.matches('.*(/|\\.\\.).*');
+    }
+
+    function hasValidCloudVideoShape(data) {
+      return data.keys().hasAll([
+          'userId',
+          'title',
+          'sourceType',
+          'videoUrl',
+          'thumbnailUrl',
+          'categoryId',
+          'favorite',
+          'durationMs',
+          'createdAt',
+          'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'userId',
+          'title',
+          'sourceType',
+          'videoUrl',
+          'thumbnailUrl',
+          'categoryId',
+          'favorite',
+          'durationMs',
+          'createdAt',
+          'updatedAt'
+        ]) &&
+        data.userId is string &&
+        data.userId == request.auth.uid &&
+        data.title is string &&
+        data.title.size() > 0 &&
+        data.title.size() <= 150 &&
+        data.sourceType in ['YOUTUBE', 'CLOUD_URL'] &&
+        data.videoUrl is string &&
+        data.videoUrl.size() > 0 &&
+        data.videoUrl.size() <= 1000 &&
+        data.thumbnailUrl is string &&
+        data.thumbnailUrl.size() <= 1000 &&
+        data.categoryId in ['cartoon', 'music', 'educational', 'games'] &&
+        data.favorite is bool &&
+        data.durationMs is int &&
+        data.durationMs >= 0 &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    match /users/{userId}/videos/{videoId} {
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId);
+
+      allow create: if isOwner(userId) &&
+        isValidId(videoId) &&
+        hasValidCloudVideoShape(request.resource.data) &&
+        request.resource.data.userId == userId &&
+        request.resource.data.createdAt <= request.time &&
+        request.resource.data.updatedAt <= request.time;
+
+      allow update: if isOwner(userId) &&
+        isValidId(videoId) &&
+        hasValidCloudVideoShape(request.resource.data) &&
+        request.resource.data.userId == userId &&
+        request.resource.data.createdAt == resource.data.createdAt &&
+        request.resource.data.updatedAt <= request.time;
+
+      allow delete: if isOwner(userId);
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
