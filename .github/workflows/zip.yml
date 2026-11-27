@@ -13,7 +13,7 @@ jobs:
 
       - name: Zipi Ana Dizine Çıkar
         run: |
-          ZIP_DOSYASI="ycloud-nov-27-2026-5-06-32-pm.zip"
+          ZIP_DOSYASI="ycloud-nov-27-2026-8-07-15-pm.zip"
           
           if [ ! -f "$ZIP_DOSYASI" ]; then
             echo "Hata: $ZIP_DOSYASI ana dizinde bulunamadı!"
