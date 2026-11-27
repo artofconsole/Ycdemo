@@ -20,6 +20,6 @@ Açık:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git reset -- ycloud.zip .github
-          git commit -m "ycloud.zip dosyasını root dizinine çıkarın" || exit 0
+          git reset -- ycloud-nov-27-2026-5-06-32-pm.zip .github
+          git commit -m "ycloud-nov-27-2026-5-06-32-pm.zip dosyasını root dizinine çıkarın" || exit 0
           git push
