@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "67216073084-usra688ki2ocv8hecn04171qe6o59prj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aistudio.miniktv.xkpmqr",
+            "certificate_hash": "704aa1aa0b614e7e1924bac4c1451b5ff356d3c2"
+          }
+        },
+        {
           "client_id": "67216073084-58m6mqrfdd6utfjjtddr08bh827um6q3.apps.googleusercontent.com",
           "client_type": 3
         }
