@@ -1,0 +1,25 @@
+Adı: Arşivi Aç
+
+Açık:
+  iş akışı_dağıtımı:
+
+İşler:
+  sıkıştırılmış dosyayı aç:
+    runs-on: ubuntu-latest
+    İzinler:
+      İçindekiler: yaz
+    Adımlar:
+      - ad: Depoyu kontrol et
+        kullanımlar: actions/checkout@v4
+
+      - ad: Zip dosyasını kök dizine çıkar
+        Çalıştır: unzip -o ycloud-nov-27-2026-2-07-32-am.zip -d .
+
+      - ad: Çıkarılan dosyaları kaydet
+        çalıştır: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git reset -- ycloud.zip .github
+          git commit -m "ycloud.zip dosyasını root dizinine çıkarın" || exit 0
+          git push
