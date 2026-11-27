@@ -1,0 +1,75 @@
+{
+  "entities": {
+    "CloudVideo": {
+      "title": "CloudVideo",
+      "description": "A parent-approved YouTube or Cloud direct video link synced across the family's devices.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the parent account."
+        },
+        "title": {
+          "type": "string",
+          "description": "Display title of the video."
+        },
+        "sourceType": {
+          "type": "string",
+          "enum": ["YOUTUBE", "CLOUD_URL"],
+          "description": "Video source type."
+        },
+        "videoUrl": {
+          "type": "string",
+          "description": "YouTube watch/embed URL or direct cloud stream URL."
+        },
+        "thumbnailUrl": {
+          "type": "string",
+          "description": "Optional remote thumbnail image URL."
+        },
+        "categoryId": {
+          "type": "string",
+          "enum": ["cartoon", "music", "educational", "games"],
+          "description": "Kids content category identifier."
+        },
+        "favorite": {
+          "type": "boolean",
+          "description": "Whether the video is marked as a favorite."
+        },
+        "durationMs": {
+          "type": "integer",
+          "description": "Optional video duration in milliseconds."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server last update timestamp."
+        }
+      },
+      "required": [
+        "userId",
+        "title",
+        "sourceType",
+        "videoUrl",
+        "thumbnailUrl",
+        "categoryId",
+        "favorite",
+        "durationMs",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/videos/{videoId}": {
+      "schema": {
+        "$ref": "#/entities/CloudVideo"
+      },
+      "description": "Per-parent synced video links (YouTube and Cloud URLs)."
+    }
+  }
+}
