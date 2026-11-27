@@ -1,6 +1,0 @@
-{
-  "name": "yCloud",
-  "description": "Çocuklar için güvenli ekran kilitli Android ve Android TV video oynatıcı: yerel videolar, YouTube bağlantıları, bulut akışı ve QR ile TV'ye aktarım.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
