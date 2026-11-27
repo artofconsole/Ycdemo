@@ -13,7 +13,7 @@ Açık:
         kullanımlar: actions/checkout@v4
 
       - ad: Zip dosyasını kök dizine çıkar
-        Çalıştır: unzip -o ycloud-nov-27-2026-2-07-32-am.zip -d .
+        Çalıştır: unzip -o ycloud-nov-27-2026-5-06-32-pm.zip -d .
 
       - ad: Çıkarılan dosyaları kaydet
         çalıştır: |
