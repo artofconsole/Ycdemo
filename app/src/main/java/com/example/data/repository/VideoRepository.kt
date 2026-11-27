@@ -633,20 +633,33 @@ class VideoRepository(
     private fun persistOrCopyVideoUri(uri: Uri): Uri? {
         if (uri.scheme == "file") return uri
 
-        runCatching {
+        val persisted = try {
             context.contentResolver.takePersistableUriPermission(
                 uri,
                 Intent.FLAG_GRANT_READ_URI_PERMISSION
             )
+            true
+        } catch (_: SecurityException) {
+            false
+        } catch (_: IllegalArgumentException) {
+            false
         }
 
-        // Daha önce uygulama deposuna kopyalanmış ağır video dosyaları varsa temizle
-        runCatching {
-            val oldDir = File(context.filesDir, "imported_videos")
-            if (oldDir.exists()) oldDir.deleteRecursively()
-        }
+        if (persisted) return uri
 
-        return uri
+        return try {
+            val dir = File(context.filesDir, "imported_videos").apply { mkdirs() }
+            val fileName = "vid_${UUID.randomUUID()}.mp4"
+            val destFile = File(dir, fileName)
+            context.contentResolver.openInputStream(uri)?.use { input ->
+                FileOutputStream(destFile).use { output ->
+                    input.copyTo(output, bufferSize = 64 * 1024)
+                }
+            } ?: return null
+            Uri.fromFile(destFile)
+        } catch (_: Exception) {
+            uri
+        }
     }
 
     private fun queryDisplayName(uri: Uri): String? {
@@ -676,7 +689,7 @@ class VideoRepository(
         return withoutExt
             .replace('_', ' ')
             .replace('-', ' ')
-            .replace(Regex("\s+"), " ")
+            .replace(Regex("\\s+"), " ")
             .trim()
             .ifEmpty { "Çocuk Videosu" }
     }
