@@ -1,25 +1,43 @@
-Adı: Arşivi Aç
+name: Zip Dosyasını Çıkar
+on: [workflow_dispatch]
 
-Açık:
-  iş akışı_dağıtımı:
+permissions:
+  contents: write
 
-İşler:
-  sıkıştırılmış dosyayı aç:
+jobs:
+  extract-zip:
     runs-on: ubuntu-latest
-    İzinler:
-      İçindekiler: yaz
-    Adımlar:
-      - ad: Depoyu kontrol et
-        kullanımlar: actions/checkout@v4
+    steps:
+      - name: Depoyu İndir
+        uses: actions/checkout@v4
 
-      - ad: Zip dosyasını kök dizine çıkar
-        Çalıştır: unzip -o ycloud-nov-27-2026-5-06-32-pm.zip -d .
+      - name: Zipi Ana Dizine Çıkar
+        run: |
+          ZIP_DOSYASI="ycloud-nov-27-2026-5-06-32-pm.zip"
+          
+          if [ ! -f "$ZIP_DOSYASI" ]; then
+            echo "Hata: $ZIP_DOSYASI ana dizinde bulunamadı!"
+            exit 1
+          fi
 
-      - ad: Çıkarılan dosyaları kaydet
-        çalıştır: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir -p temp_extract
+          unzip -q "$ZIP_DOSYASI" -d temp_extract
+
+          # Eğer zip içinde her şey tek bir alt klasörde toplandıysa içeriğini doğrudan ana dizine alır
+          KLASOR_SAYISI=$(find temp_extract -mindepth 1 -maxdepth 1 | wc -l)
+          if [ "$KLASOR_SAYISI" -eq 1 ] && [ -d "$(find temp_extract -mindepth 1 -maxdepth 1)" ]; then
+            IC_KLASOR=$(find temp_extract -mindepth 1 -maxdepth 1)
+            cp -rn "$IC_KLASOR"/. .
+          else
+            cp -rn temp_extract/. .
+          fi
+
+          rm -rf temp_extract
+
+      - name: Değişiklikleri Kaydet ve Gönder
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
           git add -A
-          git reset -- ycloud-nov-27-2026-5-06-32-pm.zip .github
-          git commit -m "ycloud-nov-27-2026-5-06-32-pm.zip dosyasını root dizinine çıkarın" || exit 0
+          git commit -m "Zip içeriği ana dizine çıkarıldı" || exit 0
           git push
