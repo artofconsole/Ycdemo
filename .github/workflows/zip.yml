@@ -23,6 +23,9 @@ jobs:
           mkdir -p temp_extract
           unzip -q "$ZIP_DOSYASI" -d temp_extract
 
+          # Zip içindeki .github klasörünü güvenlik kısıtlamasına takılmaması için sil
+          find temp_extract -name ".github" -type d -exec rm -rf {} +
+
           # Eğer zip içinde her şey tek bir alt klasörde toplandıysa içeriğini doğrudan ana dizine alır
           KLASOR_SAYISI=$(find temp_extract -mindepth 1 -maxdepth 1 | wc -l)
           if [ "$KLASOR_SAYISI" -eq 1 ] && [ -d "$(find temp_extract -mindepth 1 -maxdepth 1)" ]; then
