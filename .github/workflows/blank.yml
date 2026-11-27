@@ -13,14 +13,18 @@ jobs:
           java-version: '17'
       - name: Gradle Kurulumu ve APK Derleme
         uses: gradle/actions/setup-gradle@v4
-      - name: Debug Keystore Oluştur ve SHA-1 Göster
+      - name: Sabit Keystore Kontrol ve Oluşturma
         run: |
-          keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+          if [ ! -f debug.keystore ]; then
+            keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+          fi
           keytool -list -v -keystore debug.keystore -alias androiddebugkey -storepass android -keypass android | grep -E "SHA1:|SHA256:"
       - name: APK Oluştur
         run: gradle assembleDebug
-      - name: APK Yükle
+      - name: APK ve Keystore Yükle
         uses: actions/upload-artifact@v4
         with:
-          name: hazir-apk
-          path: app/build/outputs/apk/debug/*.apk
+          name: hazir-apk-ve-keystore
+          path: |
+            app/build/outputs/apk/debug/*.apk
+            debug.keystore
