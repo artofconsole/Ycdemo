@@ -630,23 +630,21 @@ class VideoRepository(
         }
     }
 
-    private fun persistOrCopyVideoUri(uri: Uri): Uri? {
-        if (uri.scheme == "file") return uri
-
-        val persisted = try {
-            context.contentResolver.takePersistableUriPermission(
+        private fun persistOrCopyVideoUri(uri: Uri): Uri {
+        val resolver = context.contentResolver
+        runCatching {
+            resolver.takePersistableUriPermission(
                 uri,
-                Intent.FLAG_GRANT_READ_URI_PERMISSION
+                Intent.FLAG_GRANT_READ_URI_PERMISSION,
             )
-            true
-        } catch (_: SecurityException) {
-            false
-        } catch (_: IllegalArgumentException) {
-            false
         }
-
-        if (persisted) return uri
-
+        runCatching {
+            val oldDir = File(context.filesDir, "imported_videos")
+            if (oldDir.exists()) oldDir.deleteRecursively()
+        }
+        return uri
+    }
+        
         return try {
             val dir = File(context.filesDir, "imported_videos").apply { mkdirs() }
             val fileName = "vid_${UUID.randomUUID()}.mp4"
