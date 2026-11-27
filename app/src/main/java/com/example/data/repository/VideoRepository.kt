@@ -630,34 +630,22 @@ class VideoRepository(
         }
     }
 
-        private fun persistOrCopyVideoUri(uri: Uri): Uri {
-        val resolver = context.contentResolver
+    private fun persistOrCopyVideoUri(uri: Uri): Uri? {
+        if (uri.scheme == "file") return uri
+
         runCatching {
-            resolver.takePersistableUriPermission(
+            context.contentResolver.takePersistableUriPermission(
                 uri,
-                Intent.FLAG_GRANT_READ_URI_PERMISSION,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
             )
         }
+
         runCatching {
             val oldDir = File(context.filesDir, "imported_videos")
             if (oldDir.exists()) oldDir.deleteRecursively()
         }
+
         return uri
-    }
-        
-        return try {
-            val dir = File(context.filesDir, "imported_videos").apply { mkdirs() }
-            val fileName = "vid_${UUID.randomUUID()}.mp4"
-            val destFile = File(dir, fileName)
-            context.contentResolver.openInputStream(uri)?.use { input ->
-                FileOutputStream(destFile).use { output ->
-                    input.copyTo(output, bufferSize = 64 * 1024)
-                }
-            } ?: return null
-            Uri.fromFile(destFile)
-        } catch (_: Exception) {
-            uri
-        }
     }
 
     private fun queryDisplayName(uri: Uri): String? {
